@@ -1,0 +1,59 @@
+{
+  "name": "react-doc-previewer",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@bundled-es-modules/pdfjs-dist": "^3.6.172-alpha.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.2",
+    "vite": "^5.3.1",
+    "vite-plugin-dts": "^3.9.1",
+    "vite-tsconfig-paths": "^4.3.2"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "keywords": [
+    "react",
+    "document",
+    "image",
+    "canvas",
+    "preview",
+    "view"
+  ],
+  "author": "FireAnt",
+  "description": "React package to vew differnt doc file formats using canvas",
+  "main": "./react-doc-previewer.es.js",
+  "module": "./react-doc-previewer.es.js",
+  "exports": {
+    ".": {
+      "import": "./react-doc-previewer.es.js",
+      "require": "./react-doc-previewer.umd.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT"
+}
