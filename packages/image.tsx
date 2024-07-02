@@ -47,7 +47,7 @@ export const ImageCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCa
 	}, [url]);
 
 	return (
-		<div ref={canvasRef} id="canvasId" style={{ background: "rgba(0,0,0,.9)", ...cssMap({ variant }), visibility: show ? "visible" : "hidden" }}>
+		<div ref={canvasRef} id="canvasId" style={{ background: "rgba(0,0,0,.9)", ...cssMap({ variant }), visibility: show ? "visible" : "hidden", pointerEvents: "auto" }}>
 			<canvas id="myCanvas" width={0} height={0} style={{ border: "1px solid #000000" }}>
 				Your browser does not support the HTML canvas tag.
 			</canvas>

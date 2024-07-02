@@ -99,6 +99,7 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 			textAlign: 'center',
 			background: 'rgba(0, 0, 0, 0.8)',
 			overflow: "auto",
+			pointerEvents: "auto"
 		}}>
 			<canvas id="myCanvas" width={0} height={0} style={{ border: "1px solid #000000" }}>
 				Your browser does not support the HTML canvas tag.
