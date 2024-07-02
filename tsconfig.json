@@ -32,5 +32,5 @@
       "index.d.ts"
     ]
   },
-  "include": ["package/*"],
+  "include": ["package/*, package/pdf.worker.ts"],
   "references": [ { "path": "./tsconfig.node.json" } ] }

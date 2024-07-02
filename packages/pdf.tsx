@@ -45,7 +45,7 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 	const canvasRef = useCallback(async (node: HTMLDivElement) => {
 		if (node !== null) {
 			pdfjs.GlobalWorkerOptions.workerSrc =
-				"./packages/pdf.worker.js";
+				"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.worker.min.js";
 			const loadingTask = pdfjs.getDocument(url);
 			const pdf = await loadingTask.promise;
 			const page = await pdf.getPage(pageNo);
@@ -64,7 +64,7 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 			canvas.style.height = Math.floor(viewport.height) + "px";
 			const transform = outputScale !== 1
 				? [outputScale, 0, 0, outputScale, 0, 0]
-				: [];
+				: null as unknown as undefined;
 
 			//
 			// Render PDF page into canvas context
@@ -93,13 +93,12 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 	}, [url, pageNo, pageScale]);
 
 	return (
-		<div ref={canvasRef} id="canvasId" style={{
+		<div ref={canvasRef} style={{
 			...cssMap({ variant }), visibility: show ? "visible" : "hidden",
-			display: 'block',
+			display: 'ruby',
 			textAlign: 'center',
 			background: 'rgba(0, 0, 0, 0.8)',
-			overflow: "scroll",
-			overflowX: "scroll"
+			overflow: "auto",
 		}}>
 			<canvas id="myCanvas" width={0} height={0} style={{ border: "1px solid #000000" }}>
 				Your browser does not support the HTML canvas tag.
@@ -135,8 +134,29 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 					borderRadius: "15px",
 					overflow: "hidden"
 				}}>
-				<button disabled={pageNo === 1} onClick={() => setPageNo(prev => prev !== 1 ? prev - 1 : prev)}>prev</button>
-				<button disabled={pageNo === totalPages} onClick={() => setPageNo(prev => totalPages ? prev + 1 : prev)}>next</button>
+				<button
+					style={{
+						padding: "8px 18px",
+						background: pageNo === 1 ? "#575757" : "rgba(0, 0, 0, .8)",
+						color: "#fff",
+						fontSize: "18px",
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+					}}
+					disabled={pageNo === 1} onClick={() => setPageNo(prev => prev !== 1 ? prev - 1 : prev)}>prev</button>
+				<button
+					style={{
+
+						padding: "8px 18px",
+						background: pageNo === totalPages ? "#575757" : "rgba(0, 0, 0, .8)",
+						color: "#fff",
+						fontSize: "18px",
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+					}}
+					disabled={pageNo === totalPages} onClick={() => setPageNo(prev => totalPages ? prev + 1 : prev)}>next</button>
 			</div>
 		</div >
 	)

@@ -62,6 +62,13 @@ export class ImagePreviewer {
 			this.calculateInitialPos();
 			this.drawGraph();
 		}
+		const errorImage = () => {
+			this.Context2d!.clearRect(0, 0, this.canvasEle.offsetWidth, this.canvasEle.offsetHeight);
+			this.Context2d.font = "16px Arial";
+			this.Context2d.fillStyle = "white";
+			this.Context2d.fillText("Could not load image", (this.canvasSize[0] / 2) - 50, this.canvasSize[1] / 2);
+		}
+		this.image.onerror = errorImage;
 		this.image.onload = loadedImage;
 	}
 
