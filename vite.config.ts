@@ -11,7 +11,7 @@ export default defineConfig({
     react(),
     tsConfigPaths(),
     dts({
-      include: ['packages/'],
+      include: ['packages/index.tsx'],
     }),
   ],
   build: {
