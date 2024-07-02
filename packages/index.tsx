@@ -8,8 +8,8 @@ const DocPreviewer = ({
 		<div style={{
 			position: "relative",
 			overflow: "hidden",
-			width: "400px",
-			height: "400px"
+			width: rest.variant === "inherit" ? 'inherit' : rest.variant === "full" ? '100%' : rest.variant[0],
+			height: rest.variant === "inherit" ? 'inherit' : rest.variant === "full" ? '100%' : rest.variant[1],
 		}} >
 			{
 				type === "image" ?
