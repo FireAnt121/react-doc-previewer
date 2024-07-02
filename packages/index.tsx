@@ -15,7 +15,7 @@ const DocPreviewer = ({
 			ele.id = "react-doc-previwer-121";
 
 			const root = createRoot(ele);
-			close = () => { root.unmount(); onClose() };
+			close = () => { root.unmount(); ele.remove(); onClose() };
 			root.render(
 				type === "image" ?
 					<ImageCanvas {...rest} onClose={close} /> :
