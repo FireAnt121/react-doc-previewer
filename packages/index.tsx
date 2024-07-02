@@ -13,7 +13,6 @@ const DocPreviewer = ({
 		if (show && variant === 'full') {
 			const ele = document.createElement('div');
 			ele.id = "react-doc-previwer-121";
-			ele.setAttribute('style', 'position:fixed')
 
 			const root = createRoot(ele);
 			close = () => { root.unmount(); onClose() };
@@ -34,6 +33,7 @@ const DocPreviewer = ({
 			style={{
 				position: "relative",
 				overflow: "hidden",
+				pointerEvents: "auto",
 				width: rest.variant === "inherit" ? 'inherit' : rest.variant === "full" ? '100%' : rest.variant[0],
 				height: rest.variant === "inherit" ? 'inherit' : rest.variant === "full" ? '100%' : rest.variant[1],
 			}} >
