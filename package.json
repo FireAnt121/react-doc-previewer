@@ -1,6 +1,6 @@
 {
   "name": "react-doc-previewer",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -43,12 +43,13 @@
   ],
   "author": "FireAnt",
   "description": "React package to vew differnt doc file formats using canvas",
-  "main": "./react-doc-previewer.es.js",
-  "module": "./react-doc-previewer.es.js",
+  "main": "./dist/react-doc-previewer.es.js",
+  "module": "./dist/react-doc-previewer.es.js",
   "exports": {
     ".": {
-      "import": "./react-doc-previewer.es.js",
-      "require": "./react-doc-previewer.umd.js"
+      "types":"./dist/index.d.ts",
+      "import": "./dist/react-doc-previewer.es.js",
+      "require": "./dist/react-doc-previewer.umd.js"
     }
   },
   "files": [
