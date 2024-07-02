@@ -1,30 +1,52 @@
-# React + TypeScript + Vite
+# React Doc Previewer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React Doc Previewer is a versatile React component library designed to facilitate the previewing of various image and pdf formats within your React applications.
 
-Currently, two official plugins are available:
+## Features
+Pdf Preview: Display previews for pdf documents.
+Image Preview: Preview images in various formats such as JPEG, PNG .
+Responsive: Ensures a responsive viewing experience across devices.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
+## Installation
+You can install the package via npm or yarn:
 ```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+npm i react-doc-previewer
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Usage
+```jsx
+  const [show, setShow] = useState(false)
+  const [document, setDocument] = useState({ url: IMAGE_URL, type: "image" });
+  return (
+      <div style={{ position: "relative", width: "100%", height: "100vh", overflow: "hidden" }}>
+        <DocPreviewer type={im.type} variant={'full'} url={im.url} show={count} onClose={() => setCount(false)} />
+        <button onClick={() => setCount(true)} >show</button>
+        <button
+          onClick={() => {
+            setIm((prev) => (prev.type === "image" ? {
+              url: PDF,
+              type: "pdf"
+            } : {
+              url: IMAGE_URL2,
+              type: "image"
+            }));
+          }}
+        >
+          switch
+        </button>
+      </div>
+```
+
+## Props
+Component Props
+- type: image | pdf 
+- variant: full | inherit | [number, number]  
+- show: boolean
+- onClose: () => {}
+- url: url of the document
+
+## License
+This project is licensed under the MIT License.
+
+## Contributing
+Contributions are welcome! Please feel free to submit a pull request or open an issue for any bugs or feature requests.
