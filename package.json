@@ -54,5 +54,9 @@
   "files": [
     "dist"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/FireAnt121/react-doc-previewer"
+}
 }
