@@ -18,7 +18,7 @@ const cssMap = ({ variant }: Pick<ImageCanvasProps, 'variant'>): CSSProperties =
 				position: "fixed",
 				top: 0,
 				paddingTop: 40,
-				zIndex: 20
+				zIndex: 100
 			}
 		case "inherit":
 			return {
