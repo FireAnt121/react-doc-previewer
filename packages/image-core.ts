@@ -90,7 +90,7 @@ export class ImagePreviewer {
 		const newScale = this.scale - .5;
 		this.scale = newScale > 3 || newScale < 1 ? this.scale : newScale;
 		this.shiftingSize = [0, 0];
-		if (this.canvasEle) this.calculateInitialSize().calculateInitialPos().drawGraph();
+		if (this.canvasEle && this.imageSize[0] > 0) this.calculateInitialSize().calculateInitialPos().drawGraph();
 	}
 
 	public set setImageSize(newImageSize: Axis) {
