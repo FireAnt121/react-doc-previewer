@@ -39,56 +39,65 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 
 	const [pageNo, setPageNo] = useState(1);
 	const [pageScale, setPageScale] = useState(1);
-	const [totalPages, setTotalPages] = useState(0);
+	const [totalPages, setTotalPages] = useState(1);
 	let isMouseDown = false;
 
 	const canvasRef = useCallback(async (node: HTMLDivElement) => {
 		if (node !== null) {
+			const canvas = node.children[0] as unknown as HTMLCanvasElement;
+			const context = canvas.getContext("2d")!;
 			pdfjs.GlobalWorkerOptions.workerSrc =
 				"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.worker.min.js";
 			const loadingTask = pdfjs.getDocument(url);
-			const pdf = await loadingTask.promise;
-			const page = await pdf.getPage(pageNo);
-			const scale = pageScale;
-			setTotalPages(pdf.numPages);
-			const viewport = page.getViewport({ scale });
-			// Support HiDPI-screens.
-			const outputScale = window.devicePixelRatio || 1;
-			const canvas = node.children[0] as unknown as HTMLCanvasElement;
-			const context = canvas.getContext("2d")!;
+			loadingTask.promise.then(async (pdf) => {
+				const page = await pdf.getPage(pageNo);
+				const scale = pageScale;
+				setTotalPages(pdf.numPages);
+				const viewport = page.getViewport({ scale });
+				// Support HiDPI-screens.
+				const outputScale = window.devicePixelRatio || 1;
 
-			canvas.width = Math.floor(viewport.width * outputScale);
-			canvas.height = Math.floor(viewport.height * outputScale);
-			canvas.style.background = "#000";
-			canvas.style.width = Math.floor(viewport.width) + "px";
-			canvas.style.height = Math.floor(viewport.height) + "px";
-			const transform = outputScale !== 1
-				? [outputScale, 0, 0, outputScale, 0, 0]
-				: null as unknown as undefined;
+				canvas.width = Math.floor(viewport.width * outputScale);
+				canvas.height = Math.floor(viewport.height * outputScale);
+				canvas.style.background = "#000";
+				canvas.style.width = Math.floor(viewport.width) + "px";
+				canvas.style.height = Math.floor(viewport.height) + "px";
+				const transform = outputScale !== 1
+					? [outputScale, 0, 0, outputScale, 0, 0]
+					: null as unknown as undefined;
 
-			//
-			// Render PDF page into canvas context
-			//
-			const renderContext = {
-				canvasContext: context,
-				transform,
-				viewport,
-			};
-			page.render(renderContext);
-			let x = 0, y = 0;
-			function handleMouse(e: MouseEvent) {
-				if (x && y && isMouseDown) {
-					// Scroll window by difference between current and previous positions
-					node.scrollBy(e.clientX - x, e.clientY - y);
+				//
+				// Render PDF page into canvas context
+				//
+				const renderContext = {
+					canvasContext: context,
+					transform,
+					viewport,
+				};
+				page.render(renderContext);
+				let x = 0, y = 0;
+				function handleMouse(e: MouseEvent) {
+					if (x && y && isMouseDown) {
+						// Scroll window by difference between current and previous positions
+						node.scrollBy(e.clientX - x, e.clientY - y);
+					}
+
+					// Store current position
+					x = e.clientX;
+					y = e.clientY;
 				}
-
-				// Store current position
-				x = e.clientX;
-				y = e.clientY;
+				document.onmousedown = () => { isMouseDown = true }
+				document.onmouseup = () => { isMouseDown = false }
+				document.onmousemove = handleMouse;
+			}).catch(e => {
+				canvas.setAttribute("width", node.offsetWidth);
+				canvas.setAttribute("height", node.offsetHeight);
+				context!.clearRect(0, 0, node.offsetWidth, node.offsetHeight);
+				context.font = "16px Arial";
+				context.fillStyle = "white";
+				context.fillText("Could not load pdf", (node.offsetWidth / 2) - 50, node.offsetHeight / 2);
 			}
-			document.onmousedown = () => { isMouseDown = true }
-			document.onmouseup = () => { isMouseDown = false }
-			document.onmousemove = handleMouse;
+			);
 		}
 	}, [url, pageNo, pageScale]);
 
