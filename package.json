@@ -1,6 +1,6 @@
 {
   "name": "react-doc-previewer",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -47,7 +47,7 @@
   "module": "./dist/react-doc-previewer.es.js",
   "exports": {
     ".": {
-      "types":"./dist/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/react-doc-previewer.es.js",
       "require": "./dist/react-doc-previewer.umd.js"
     }
@@ -57,7 +57,7 @@
   ],
   "license": "MIT",
   "repository": {
-  "type": "git",
-  "url": "https://github.com/FireAnt121/react-doc-previewer"
-}
+    "type": "git",
+    "url": "git+https://github.com/FireAnt121/react-doc-previewer.git"
+  }
 }
