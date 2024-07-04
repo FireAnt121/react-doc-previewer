@@ -90,8 +90,8 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 				document.onmouseup = () => { isMouseDown = false }
 				document.onmousemove = handleMouse;
 			}).catch(e => {
-				canvas.setAttribute("width", node.offsetWidth);
-				canvas.setAttribute("height", node.offsetHeight);
+				canvas.setAttribute("width", node.offsetWidth.toString());
+				canvas.setAttribute("height", node.offsetHeight.toString());
 				context!.clearRect(0, 0, node.offsetWidth, node.offsetHeight);
 				context.font = "16px Arial";
 				context.fillStyle = "white";
