@@ -1,7 +1,6 @@
 {
   "name": "react-doc-previewer",
-  "version": "0.0.18",
-  "type": "module",
+  "version": "0.0.19",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

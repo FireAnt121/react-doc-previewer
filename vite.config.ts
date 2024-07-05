@@ -18,7 +18,8 @@ export default defineConfig({
     lib: {
       entry: resolve('packages', 'index.tsx'),
       name: 'ReactDocPreviewer',
-      formats: ['es', 'umd', 'cjs']
+      formats: ['es', 'umd'],
+      fileName: (format) => `react-doc-previewer.${format}.js`
     },
     rollupOptions: {
       external: [...Object.keys(packageJson.peerDependencies)],
