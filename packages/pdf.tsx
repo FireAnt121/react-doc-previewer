@@ -1,5 +1,6 @@
 import { CSSProperties, useCallback, useState } from "react"
 import { MaximizeIcon, MinimizeIcon, CloseIcon } from "./icons";
+// @ts-ignore Import module
 import pdfjs from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.6.172/+esm';
 
 type ImageCanvasProps = {
@@ -43,13 +44,19 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 	let isMouseDown = false;
 
 	const canvasRef = useCallback(async (node: HTMLDivElement) => {
-		if (node !== null) {
+		if (node !== null && pdfjs !== null) {
 			const canvas = node.children[0] as unknown as HTMLCanvasElement;
 			const context = canvas.getContext("2d")!;
 			pdfjs.GlobalWorkerOptions.workerSrc =
 				"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.worker.min.js";
 			const loadingTask = pdfjs.getDocument(url);
-			loadingTask.promise.then(async (pdf) => {
+			canvas.setAttribute("width", node.offsetWidth.toString());
+			canvas.setAttribute("height", node.offsetHeight.toString());
+			context!.clearRect(0, 0, node.offsetWidth, node.offsetHeight);
+			context.font = "16px Arial";
+			context.fillStyle = "white";
+			context.fillText("Loading pdf...", (node.offsetWidth / 2) - 50, node.offsetHeight / 2);
+			loadingTask.promise.then(async (pdf: pdfjs) => {
 				const page = await pdf.getPage(pageNo);
 				const scale = pageScale;
 				setTotalPages(pdf.numPages);
@@ -89,7 +96,7 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 				document.onmousedown = () => { isMouseDown = true }
 				document.onmouseup = () => { isMouseDown = false }
 				document.onmousemove = handleMouse;
-			}).catch(e => {
+			}).catch((e: any) => {
 				canvas.setAttribute("width", node.offsetWidth.toString());
 				canvas.setAttribute("height", node.offsetHeight.toString());
 				context!.clearRect(0, 0, node.offsetWidth, node.offsetHeight);
@@ -99,7 +106,7 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 			}
 			);
 		}
-	}, [url, pageNo, pageScale]);
+	}, [url, pageNo, pageScale, pdfjs]);
 
 	return (
 		<div ref={canvasRef} style={{
