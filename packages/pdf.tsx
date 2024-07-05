@@ -1,6 +1,6 @@
 import { CSSProperties, useCallback, useState } from "react"
 import { MaximizeIcon, MinimizeIcon, CloseIcon } from "./icons";
-import pdfjs from "@bundled-es-modules/pdfjs-dist/build/pdf";
+import pdfjs from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.6.172/+esm';
 
 type ImageCanvasProps = {
 	url: string,
