@@ -2,7 +2,6 @@ import { CSSProperties, useCallback, useState } from "react"
 import { MaximizeIcon, MinimizeIcon, CloseIcon } from "./icons";
 // @ts-ignore Import module
 import * as pdfjs from './pdfjs-dist';
-//const pdfjs = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.min.js');
 
 type ImageCanvasProps = {
 	url: string,
