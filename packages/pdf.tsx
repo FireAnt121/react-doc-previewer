@@ -1,7 +1,8 @@
 import { CSSProperties, useCallback, useState } from "react"
 import { MaximizeIcon, MinimizeIcon, CloseIcon } from "./icons";
 // @ts-ignore Import module
-import pdfjs from './pdfjs-dist';
+import * as pdfjs from './pdfjs-dist';
+//const pdfjs = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.min.js');
 
 type ImageCanvasProps = {
 	url: string,
@@ -48,7 +49,7 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 			const canvas = node.children[0] as unknown as HTMLCanvasElement;
 			const context = canvas.getContext("2d")!;
 			pdfjs.GlobalWorkerOptions.workerSrc =
-				"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.worker.min.js";
+				"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
 			const loadingTask = pdfjs.getDocument(url);
 			canvas.setAttribute("width", node.offsetWidth.toString());
 			canvas.setAttribute("height", node.offsetHeight.toString());

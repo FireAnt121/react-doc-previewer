@@ -3,7 +3,7 @@ export type Axis = [number, number];
 export class ImagePreviewer {
 	static instance: ImagePreviewer = new ImagePreviewer();
 	private canvasEle: any;
-	private image: HTMLImageElement = new Image();
+	private image: HTMLImageElement = {} as unknown as HTMLImageElement;
 	// private _imageLoaded: boolean = false;
 
 	private Context2d: any;

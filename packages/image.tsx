@@ -35,41 +35,41 @@ const cssMap = ({ variant }: Pick<ImageCanvasProps, 'variant'>): CSSProperties =
 	}
 }
 export const ImageCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanvasProps) => {
-
 	const n = ImagePreviewer.createInstance;
 	const canvasRef = useCallback((node: HTMLDivElement) => {
 		if (node !== null) {
 			const canvasEle = node.children[0] as unknown as HTMLCanvasElement;
 			canvasEle.width = node.getBoundingClientRect().width;
 			canvasEle.height = node.getBoundingClientRect().height;
-			n.initializeCanvas(canvasEle, url);
+			n.initializeCanvas(canvasEle, url)!;
 		}
 	}, [url]);
 
 	return (
 		<div ref={canvasRef} id="canvasId" style={{ background: "rgba(0,0,0,.9)", ...cssMap({ variant }), visibility: show ? "visible" : "hidden", pointerEvents: "auto" }}>
-			<canvas id="myCanvas" width={0} height={0} style={{ border: "1px solid #000000" }}>
+			<canvas id="myCanvas" width={0} height={0} style={{ position: "fixed", border: "1px solid #000000" }}>
 				Your browser does not support the HTML canvas tag.
 			</canvas>
-			<div
-				style={{
-					position: "absolute",
-					display: "flex",
-					top: "10px",
-					right: "20px",
-					borderRadius: "15px",
-					overflow: "hidden"
-				}}>
-				<MaximizeIcon
-					onClick={() => { n.upScale() }}
-				/>
-				<MinimizeIcon
-					onClick={() => { n.downScale() }}
-				/>
-				<CloseIcon
-					onClick={() => { n.downScale(); onClose(); }}
-				/>
-			</div>
+			{n !== null &&
+				<div
+					style={{
+						position: "absolute",
+						display: "flex",
+						top: "10px",
+						right: "20px",
+						borderRadius: "15px",
+						overflow: "hidden"
+					}}>
+					<MaximizeIcon
+						onClick={() => { n.upScale() }}
+					/>
+					<MinimizeIcon
+						onClick={() => { n.downScale() }}
+					/>
+					<CloseIcon
+						onClick={() => { n.downScale(); onClose(); }}
+					/>
+				</div>}
 		</div >
 	)
 }
