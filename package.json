@@ -1,6 +1,7 @@
 {
   "name": "react-doc-previewer",
-  "version": "0.0.22",
+  "version": "0.0.24",
+  "type":"module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -48,8 +49,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/react-doc-previewer.es.js",
-      "require": "./dist/react-doc-previewer.umd.js"
+      "import": "./dist/react-doc-previewer.es.js"
     }
   },
   "files": [
