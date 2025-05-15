@@ -58,9 +58,17 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 			context.fillText("Loading pdf...", (node.offsetWidth / 2) - 50, node.offsetHeight / 2);
 			loadingTask.promise.then(async (pdf: pdfjs) => {
 				const page = await pdf.getPage(pageNo);
-				const scale = pageScale;
+				let initialViewport = page.getViewport({ scale: pageScale });
+
+				let scale = pageScale;
+				if (window.innerWidth < initialViewport.width) {
+					let desiredWidth = window.innerWidth - 10;
+					scale = pageScale === 1 ? desiredWidth / initialViewport.width : pageScale;
+				}
+				let viewport = page.getViewport({ scale: scale });
+
 				setTotalPages(pdf.numPages);
-				const viewport = page.getViewport({ scale });
+				// const viewport = page.getViewport({ scale });
 				// Support HiDPI-screens.
 				const outputScale = window.devicePixelRatio || 1;
 
@@ -131,11 +139,11 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 				}}>
 				<MaximizeIcon
 					disabled={pageScale >= 4}
-					onClick={() => setPageScale(prev => prev <= 4 ? prev + 1 : prev)}
+					onClick={() => setPageScale(prev => prev <= 4 ? prev + .5 : prev)}
 				/>
 				<MinimizeIcon
 					disabled={pageScale === 1}
-					onClick={() => setPageScale(prev => prev > 1 ? prev - 1 : prev)}
+					onClick={() => setPageScale(prev => prev > 1 ? prev - .5 : prev)}
 				/>
 				<CloseIcon
 					onClick={onClose}
