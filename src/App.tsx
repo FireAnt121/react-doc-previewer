@@ -19,26 +19,32 @@ function getFileTypeWithRegex(url) {
   return extension ? extension.toLowerCase() : 'No extension found';
 }
 function App() {
-  const [count, setCount] = useState(false)
-  const [im, setIm] = useState({ url: IMAGE_URL, type: "image" });
+  const [count, setCount] = useState(true)
+  const [im, setIm] = useState({ url: PDF, type: "pdf" });
 
   return (
     <>
       <div>
-        <div
-          style={{
-            position: "relative",
-            overflow: "hidden",
-            width: "400px",
-            height: "400px"
-          }}
-        >
-          <DocPreviewer type={im.type} variant={'full'} url={im.url} show={count} onClose={() => setCount(false)} />
-        </div>
+        <DocPreviewer type={im.type} variant={'full'} url={im.url} show={count} onClose={() => setCount(false)} />
       </div>
-      <button onClick={() => setCount(true)}>show</button>
-      <button onClick={() => setCount(false)}>hide</button>
       <button
+        style={{
+          position: "absolute",
+          top: "10px",
+          left: "10px",
+        }}
+        onClick={() => setCount(true)}>show</button>
+      <button style={{
+        position: "absolute",
+        top: "10px",
+        left: "10px",
+      }}
+        onClick={() => setCount(false)}>hide</button>
+      <button style={{
+        position: "absolute",
+        top: "10px",
+        left: "10px",
+      }}
         onClick={() => {
           setIm((prev) => (prev.type === "image" ? {
             url: PDF,
