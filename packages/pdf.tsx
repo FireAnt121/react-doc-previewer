@@ -1,7 +1,8 @@
 import { CSSProperties, useCallback, useState } from "react"
 import { MaximizeIcon, MinimizeIcon, CloseIcon } from "./icons";
 // @ts-ignore Import module
-import * as pdfjs from './pdfjs-dist';
+// import * as pdfjs from './pdfjs-dist';
+import * as pdfjs from 'pdfjs-dist';
 
 type ImageCanvasProps = {
 	url: string,
@@ -56,7 +57,7 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 			context.font = "16px Arial";
 			context.fillStyle = "white";
 			context.fillText("Loading pdf...", (node.offsetWidth / 2) - 50, node.offsetHeight / 2);
-			loadingTask.promise.then(async (pdf: pdfjs) => {
+			loadingTask.promise.then(async (pdf) => {
 				const page = await pdf.getPage(pageNo);
 				let initialViewport = page.getViewport({ scale: pageScale });
 
@@ -105,6 +106,7 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 				document.onmouseup = () => { isMouseDown = false }
 				document.onmousemove = handleMouse;
 			}).catch((e: any) => {
+				console.log(e)
 				canvas.setAttribute("width", node.offsetWidth.toString());
 				canvas.setAttribute("height", node.offsetHeight.toString());
 				context!.clearRect(0, 0, node.offsetWidth, node.offsetHeight);
