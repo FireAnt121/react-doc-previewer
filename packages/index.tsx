@@ -23,8 +23,6 @@ const DocPreviewer = ({
 					<PDFCanvas {...rest} onClose={close} />
 			);
 			document.body.appendChild(ele);
-			console.log("here");
-
 		}
 	}, [show])
 

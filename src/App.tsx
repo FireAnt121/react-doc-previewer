@@ -12,7 +12,8 @@ const IMAGE_URL3 =
   "https://grants.gettyimages.com/images/grants/GettyImages-1229275252.png";
 const IMAGE_URL4 =
   "https://cdn.openart.ai/stable_diffusion/3aa176be81f4eb05a0ac1d3529537f16f3769888_2000x2000.webp";
-const PDF = "https://cdn.filestackcontent.com/wcrjf9qPTCKXV3hMXDwK";
+// const PDF = "https://cdn.filestackcontent.com/wcrjf9qPTCKXV3hMXDwK";
+const PDF = "https://62db-2400-74e0-0-5de1-d2cf-69c6-aca9-cc9c.ngrok-free.app/long.pdf";
 function getFileTypeWithRegex(url) {
   const regex = /(?:\.([^.]+))?$/; // Regular expression to capture file extension
   const extension = regex.exec(url)[1]; // Extract extension from URL
