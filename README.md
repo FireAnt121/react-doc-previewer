@@ -19,12 +19,12 @@ npm i react-doc-previewer
   const [document, setDocument] = useState({ url: IMAGE_URL, type: "image" });
   return (
       <div style={{ position: "relative", width: "100%", height: "100vh", overflow: "hidden" }}>
-        <DocPreviewer type={im.type} variant={'full'} url={im.url} show={count} onClose={() => setCount(false)} />
-        <button onClick={() => setCount(true)} >show</button>
+        <DocPreviewer type={im.type} variant={'full'} url={im.url} show={show} onClose={() => setShow(false)} />
+        <button onClick={() => setShow(true)} >show</button>
         <button
           onClick={() => {
-            setIm((prev) => (prev.type === "image" ? {
-              url: PDF,
+            setDocument((prev) => (prev.type === "image" ? {
+              url: PDF_URL,
               type: "pdf"
             } : {
               url: IMAGE_URL2,

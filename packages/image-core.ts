@@ -18,6 +18,10 @@ export class ImagePreviewer {
 	private tempImagePos: Axis = [0, 0];
 	private lastMouseMove: Axis = [0, 0];
 
+	private velocity: Axis = [0, 0];
+	private lastMoveTime = undefined;
+
+
 	private constructor() { }
 
 	public get imagePosition() {
@@ -97,23 +101,59 @@ export class ImagePreviewer {
 		this.imageSize = newImageSize;
 	}
 
-	//	private isMouseIntersecting = (e: MouseEvent) => {
-	//		const mouseX = e.clientX - this.canvasEle.offsetLeft;
-	//		const mouseY = e.clientY - this.canvasEle.offsetTop;
-	//		return this.Context2d.isPointInPath(mouseX, mouseY);
-	//	}
-
 	private mouseUpListener() {
-		(this.canvasEle as HTMLCanvasElement).addEventListener("mouseup", () => {
-			this.isMouseDown = false;
-			this.isDragging = false;
-			this.canvasEle.style.cursor = 'default';
-		}, false);
-		(this.canvasEle as HTMLCanvasElement).addEventListener("touchend", () => {
-			this.isMouseDown = false;
-			this.isDragging = false;
-			this.canvasEle.style.cursor = 'default';
-		}, false);
+		if (this.isTouchDevice()) {
+			(this.canvasEle as HTMLCanvasElement).addEventListener("touchend", () => {
+				this.isMouseDown = false;
+				this.isDragging = false;
+				this.canvasEle.style.cursor = 'default';
+				this.startMoving();
+			}, false);
+		} else {
+			(this.canvasEle as HTMLCanvasElement).addEventListener("mouseup", () => {
+				this.isMouseDown = false;
+				this.isDragging = false;
+				this.canvasEle.style.cursor = 'default';
+				this.startMoving();
+			}, false);
+		}
+	}
+
+	private startMoving() {
+		const friction = 0.95;
+		const minVelocity = 0.01;
+		const step = () => {
+			// Apply friction
+
+			this.velocity[0] *= friction;
+			this.velocity[1] *= friction;
+
+			// Stop if velocity is too low
+			if (Math.abs(this.velocity[0]) < minVelocity && Math.abs(this.velocity[1]) < minVelocity) {
+				return;
+			}
+			// Update position applying inverse velocity to simulate drag direction
+			const canMoveX = !(this.tempImagePos[0] <= -(this.tempImageSize[0] - this.canvasSize[0]) && this.velocity[0] < 0) && !(this.tempImagePos[0] >= 0 && this.velocity[0] > 0);
+			const canMoveY = !(this.tempImagePos[1] <= -(this.tempImageSize[1] - this.canvasSize[1]) && this.velocity[1] < 0) && !(this.tempImagePos[1] >= 0 && this.velocity[1] > 0);
+
+			if (canMoveX) {
+				this.shiftingSize[0] += this.velocity[0];
+			} else {
+				this.velocity[0] = 0;
+			}
+
+			if (canMoveY) {
+				this.shiftingSize[1] += this.velocity[1];
+			} else {
+				this.velocity[1] = 0;
+			}
+
+			this.calculateInitialSize().calculateInitialPos([...this.shiftingSize]).drawGraph();
+
+			requestAnimationFrame(step);
+		};
+
+		requestAnimationFrame(step);
 	}
 
 	private mouseDownCore(point: Axis) {
@@ -124,32 +164,61 @@ export class ImagePreviewer {
 	}
 
 	private mouseUpCore(point: Axis) {
+		const now = performance.now();
+
 		let mouseX = point[0] - this.canvasEle.offsetLeft;
 		let mouseY = point[1] - this.canvasEle.offsetTop;
+
+		if (!this.lastMoveTime) {
+			this.lastMoveTime = now;
+			this.lastMouseMove = [mouseX, mouseY];
+			return;
+		}
+
+		const dt = now - this.lastMoveTime;
+		const dx = point[0] - this.lastMouseMove[0];
+		const dy = point[1] - this.lastMouseMove[1];
+
+		// Velocity for momentum
+		this.velocity[0] = dx / dt;
+		this.velocity[1] = dy / dt;
+
 		if (this.isMouseDown) {
 			this.isDragging = true;
 		}
+		// Boundary checks
 		if (this.scale > 1 && this.isDragging) {
+			const nextX = this.shiftingSize[0] + dx;
+			const nextY = this.shiftingSize[1] + dy;
 
-			const movingRight = this.lastMouseMove[0] - mouseX < 0;
-			const movingUp = this.lastMouseMove[1] - mouseY < 0;
-			const leftBoundaryHit = this.tempImagePos[0] < 0 && this.tempImagePos[0] > -10;
-			const enoughSpaceInLeft = this.tempImageSize[0] < this.canvasSize[0];
-			const enoughSpaceTopDown = this.tempImageSize[1] < this.canvasSize[1];
-			const rightBoundaryHit = this.tempImagePos[0] < -(this.tempImageSize[0] - this.canvasSize[0]) && this.tempImagePos[0] > -(this.tempImageSize[0] - this.canvasSize[0] + 20);
-			const topBoundaryHit = this.tempImagePos[1] < 0 && this.tempImagePos[1] > -10;
-			const bottomBoundaryHit = this.tempImagePos[1] < -(this.tempImageSize[1] - this.canvasSize[1]) && this.tempImagePos[1] > -(this.tempImageSize[1] - this.canvasSize[1] + 20);
+			if (this.withinBoundsX(nextX)) this.shiftingSize[0] = nextX;
+			if (this.withinBoundsY(nextY)) this.shiftingSize[1] = nextY;
 
-			this.shiftingSize = this.shiftingSize[0] === 0 ? [...this.tempImagePos] : this.shiftingSize;
-			this.shiftingSize[0] = this.shiftingSize[0] + (!movingRight && leftBoundaryHit || movingRight && rightBoundaryHit || enoughSpaceInLeft ? 0 : this.moveValue(this.lastMouseMove[0], mouseX)!)
-			this.shiftingSize[1] = this.shiftingSize[1] + (!movingUp && topBoundaryHit || movingUp && bottomBoundaryHit || enoughSpaceTopDown ? 0 : this.moveValue(this.lastMouseMove[1], mouseY)!)
-			this.calculateInitialSize().calculateInitialPos([...this.shiftingSize]).drawGraph();
+			this.calculateInitialSize()
+				.calculateInitialPos([...this.shiftingSize])
+				.drawGraph();
+
 			this.lastMouseMove = [mouseX, mouseY];
+			this.lastMoveTime = now;
 		}
 	}
 
+	private withinBoundsX(posX: number): boolean {
+		const minX = Math.min(0, this.canvasSize[0] - this.tempImageSize[0]); // left boundary
+		const maxX = 0; // right boundary (image can't move right beyond this)
+
+		return posX >= minX && posX <= maxX;
+	}
+
+	private withinBoundsY(posY: number): boolean {
+		const minY = Math.min(0, this.canvasSize[1] - this.tempImageSize[1]); // top boundary
+		const maxY = 0; // bottom boundary
+
+		return posY >= minY && posY <= maxY;
+	}
+
 	private mouseDownListener() {
-		if (this.canvasSize[0] < 800) {
+		if (this.isTouchDevice()) {
 			(this.canvasEle as HTMLCanvasElement).addEventListener("touchstart", (e) => {
 				this.mouseDownCore([e.touches[0].clientX, e.touches[0].clientY]);
 			}, false);
@@ -161,7 +230,7 @@ export class ImagePreviewer {
 	}
 
 	private mouseMoveListener() {
-		if (this.canvasSize[0] < 800) {
+		if (this.isTouchDevice()) {
 			(this.canvasEle as HTMLCanvasElement).addEventListener("touchmove", (e) => {
 				this.mouseUpCore([e.touches[0].clientX, e.touches[0].clientY]);
 			});
@@ -171,6 +240,14 @@ export class ImagePreviewer {
 				this.mouseUpCore([e.clientX, e.clientY]);
 			}, false);
 		}
+	}
+	private isTouchDevice() {
+		const s = (
+			'ontouchstart' in window ||
+			navigator.maxTouchPoints > 0 ||
+			window.matchMedia('(pointer: coarse)').matches
+		);
+		return s;
 	}
 
 	public calculateInitialPos = (pivot: Axis = [0, 0]) => {
@@ -210,12 +287,6 @@ export class ImagePreviewer {
 		return this;
 	}
 
-	private moveValue = (previous: number, current: number) => {
-		// const moveOffset = (ix > iy ? (ix / iy) : iy / ix);
-		if (current - previous === 0) return 0;
-		if (current - previous <= .5) return 10;
-		if (current - previous > .5) return -10;
-	}
 
 	public drawGraph = () => {
 		const [posX, posY] = [...this.tempImagePos];

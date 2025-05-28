@@ -21,7 +21,7 @@ function getFileTypeWithRegex(url) {
 }
 function App() {
   const [count, setCount] = useState(true)
-  const [im, setIm] = useState({ url: PDF, type: "pdf" });
+  const [im, setIm] = useState({ url: IMAGE_URL, type: "image" });
 
   return (
     <>
