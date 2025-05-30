@@ -1,4 +1,10 @@
 dist/
 
 node_modules/
-tsconfig.tsbuildinfo
+tsconfig.tsbuildinfo 
+frameworks/next-test/node_modules
+frameworks/next-turbo/node_modules
+frameworks/next-test/node_modules/.next/
+frameworks/next-turbo/node_modules/.next
+frameworks/next-test/node_modules/out/
+frameworks/next-turbo/node_modules/out
