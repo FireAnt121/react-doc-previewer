@@ -19,7 +19,7 @@ export class ImagePreviewer {
 	private lastMouseMove: Axis = [0, 0];
 
 	private velocity: Axis = [0, 0];
-	private lastMoveTime = undefined;
+	private lastMoveTime: number | undefined = undefined;
 
 
 	private constructor() { }

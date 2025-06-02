@@ -102,9 +102,20 @@ export const PDFCanvas = ({ url, show, onClose, variant = "inherit" }: ImageCanv
 					x = e.clientX;
 					y = e.clientY;
 				}
+				function handleTouch(e: TouchEvent) {
+					if (x && y && isMouseDown) {
+						// Scroll window by difference between current and previous positions
+						node.scrollBy(e.touches[0].clientX - x, e.touches[0].clientY - y);
+					}
+
+					// Store current position
+					x = e.touches[0].clientX;
+					y = e.touches[0].clientY;
+				}
 				document.onmousedown = () => { isMouseDown = true }
 				document.onmouseup = () => { isMouseDown = false }
 				document.onmousemove = handleMouse;
+				document.ontouchmove = handleTouch;
 			}).catch((e: any) => {
 				console.log(e)
 				canvas.setAttribute("width", node.offsetWidth.toString());
